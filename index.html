@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GrowthStudio | Turning Imagination into Execution</title>
+  
+  <!-- Tailwind CSS & Inter Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              400: '#38bdf8',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              glow: '#6366f1',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'spin-slow': 'spin 12s linear infinite',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Glow & Grid Background */
+    body {
+      background-color: #030712;
+      color: #f3f4f6;
+      overflow-x: hidden;
+    }
+    .bg-grid {
+      background-size: 40px 40px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+    .radial-gradient-glow {
+      background: radial-gradient(circle at 50% 20%, rgba(99, 102, 241, 0.15) 0%, rgba(3, 7, 18, 0) 70%);
+    }
+
+    /* AI Custom Cursor (Hidden on touch devices) */
+    @media (pointer: fine) {
+      body {
+        cursor: none;
+      }
+      #custom-cursor {
+        pointer-events: none;
+        position: fixed;
+        width: 10px;
+        height: 10px;
+        background: #38bdf8;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: transform 0.05s ease-out;
+        z-index: 9999;
+        box-shadow: 0 0 15px #38bdf8, 0 0 30px #6366f1;
+      }
+      #custom-cursor-aura {
+        pointer-events: none;
+        position: fixed;
+        width: 36px;
+        height: 36px;
+        border: 1px dashed rgba(56, 189, 248, 0.4);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: transform 0.15s ease-out;
+        z-index: 9998;
+      }
+    }
+
+    /* Glass Panels */
+    .glass-card {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-interactive {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card-interactive:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+      transform: translateY(-4px) scale(1.01);
+      box-shadow: 0 12px 30px -10px rgba(14, 165, 233, 0.15);
+    }
+  </style>
+</head>
+<body class="bg-grid antialiased selection:bg-brand-500 selection:text-white">
+
+  <!-- Custom AI Cursor Elements -->
+  <div id="custom-cursor" class="hidden md:block"></div>
+  <div id="custom-cursor-aura" class="hidden md:block"></div>
+
+  <!-- Radial Background Lighting -->
+  <div class="fixed inset-0 radial-gradient-glow pointer-events-none z-0"></div>
+
+  <!-- Sticky Glass Navbar -->
+  <header class="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 py-4">
+    <nav class="glass-card px-6 py-3 rounded-full flex items-center justify-between w-full max-w-5xl shadow-2xl">
+      <a href="#" class="flex items-center gap-2 group" onclick="playBeep(600, 'sine')">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-brand-500/20 group-hover:rotate-12 transition-transform">
+          <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+        </div>
+        <span class="font-display font-bold text-lg tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-slate-400">GrowthStudio</span>
+      </a>
+
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#about" class="hover:text-brand-400 transition" onclick="playBeep(450)">About Founder</a>
+        <a href="#services" class="hover:text-brand-400 transition" onclick="playBeep(450)">Services & Hub</a>
+        <a href="#workflow" class="hover:text-brand-400 transition" onclick="playBeep(450)">How We Work</a>
+      </div>
+
+      <button onclick="openBookingModal('General Inquiry'); playBeep(700, 'triangle');" class="relative group overflow-hidden rounded-full p-[1px] focus:outline-none">
+        <span class="absolute inset-0 bg-gradient-to-r from-brand-400 to-indigo-500 rounded-full animate-pulse-slow"></span>
+        <span class="relative px-5 py-2 rounded-full bg-slate-950 flex items-center gap-2 text-xs md:text-sm font-semibold text-white group-hover:bg-opacity-80 transition">
+          Book a Call
+          <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+        </span>
+      </button>
+    </nav>
+  </header>
+
+  <main class="relative z-10 pt-28 md:pt-36">
+
+    <!-- Hero Section -->
+    <section class="max-w-5xl mx-auto px-6 text-center pt-8 pb-20">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full glass-card text-xs md:text-sm font-medium text-brand-400 mb-8 border-brand-500/20">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+        <span>Available for New Q4 Brand Projects</span>
+      </div>
+
+      <h1 class="font-display text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white max-w-4xl mx-auto leading-[1.1] mb-6">
+        Imagination into Execution with the <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-400 via-indigo-400 to-purple-400">Power of AI.</span>
+      </h1>
+
+      <p class="text-base sm:text-lg md:text-xl text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
+        Full-stack creative AI agency engineering commercial-grade visual assets, viral UGC ads, autonomous workflows, and modern web presences.
+      </p>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+        <a href="#services" onclick="playBeep(520)" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-600 hover:to-indigo-700 font-semibold text-white shadow-xl shadow-brand-500/25 transition-all text-center">
+          Explore Services
+        </a>
+        <button onclick="openBookingModal('Hero Call'); playBeep(580);" class="w-full sm:w-auto px-8 py-3.5 rounded-xl glass-card hover:bg-slate-800/80 font-semibold text-slate-200 border-white/10 transition-all flex items-center justify-center gap-2">
+          <i data-lucide="phone-call" class="w-4 h-4 text-brand-400"></i>
+          Schedule a Demo
+        </button>
+      </div>
+
+      <!-- Trust Bar -->
+      <div class="mt-20 pt-10 border-t border-slate-800/80 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div>
+          <div class="font-display text-2xl md:text-3xl font-bold text-white">1.5+ Years</div>
+          <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">AI Field Experience</div>
+        </div>
+        <div>
+          <div class="font-display text-2xl md:text-3xl font-bold text-white">100%</div>
+          <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Autonomous Systems</div>
+        </div>
+        <div>
+          <div class="font-display text-2xl md:text-3xl font-bold text-white">Ultra HD</div>
+          <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Visual Fidelity</div>
+        </div>
+        <div>
+          <div class="font-display text-2xl md:text-3xl font-bold text-white">Zero Latency</div>
+          <div class="text-xs text-slate-500 uppercase tracking-widest mt-1">Fast Deployments</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Founder Bento Card (About) -->
+    <section id="about" class="max-w-5xl mx-auto px-6 py-16">
+      <div class="glass-card rounded-3xl p-8 md:p-12 relative overflow-hidden border-white/10">
+        <div class="absolute -right-20 -top-20 w-80 h-80 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+          <!-- Avatar Preview -->
+          <div class="md:col-span-4 flex flex-col items-center text-center">
+            <div class="relative w-36 h-36 md:w-44 md:h-44 rounded-2xl p-1 bg-gradient-to-tr from-brand-500 to-indigo-600 shadow-2xl shadow-brand-500/20 mb-4">
+              <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center overflow-hidden">
+                <!-- Fallback stylized AI Avatar vector -->
+                <div class="text-center">
+                  <div class="w-16 h-16 mx-auto mb-2 rounded-full bg-gradient-to-br from-brand-400 to-purple-600 flex items-center justify-center text-2xl font-bold text-white">
+                    G
+                  </div>
+                  <span class="text-xs text-slate-400 uppercase tracking-widest font-mono">Founder</span>
+                </div>
+              </div>
+            </div>
+            <h3 class="text-lg font-bold text-white">Gauransh</h3>
+            <p class="text-xs text-brand-400 mb-2">Founder & AI Creative Technologist</p>
+            <a href="https://instagram.com/official.growth_studio" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-white transition">
+              <i data-lucide="instagram" class="w-3.5 h-3.5"></i>
+              @official.growth_studio
+            </a>
+          </div>
+
+          <!-- Bio & Background -->
+          <div class="md:col-span-8 space-y-4">
+            <div class="inline-block px-3 py-1 rounded-md bg-brand-500/10 text-brand-400 text-xs font-semibold uppercase tracking-wider">
+              The Vision Behind GrowthStudio
+            </div>
+            <h2 class="font-display text-2xl md:text-3xl font-bold text-white leading-tight">
+              Bridging the gap between cutting-edge AI synthetic engines and commercial business revenue.
+            </h2>
+            <p class="text-sm md:text-base text-slate-300 leading-relaxed">
+              With 1.5 years dedicated strictly to generative models, automated workflows, and modern web synthesis, I help brands replace sluggish manual production cycles with high-precision AI systems that actually convert.
+            </p>
+            <div class="pt-2 flex flex-wrap gap-2">
+              <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs border border-slate-700">Flux & Midjourney Prompts</span>
+              <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs border border-slate-700">Autonomous Agents</span>
+              <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs border border-slate-700">Dynamic UI/UX Web</span>
+              <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 text-xs border border-slate-700">Vertical UGC Creatives</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Services Dynamic Hub (As Requested: Clicking opens dedicated view with its own pricing, process, testimonials, and booking) -->
+    <section id="services" class="max-w-6xl mx-auto px-6 py-16">
+      <div class="text-center mb-12">
+        <h2 class="font-display text-3xl md:text-4xl font-bold text-white mb-3">Modular Service Architecture</h2>
+        <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+          Choose a capability below to access its dedicated operational engine, customized pricing tiers, and delivery workflow.
+        </p>
+      </div>
+
+      <!-- Service Selection Pills / Tabs -->
+      <div class="flex flex-wrap items-center justify-center gap-2 mb-10">
+        <button onclick="switchService('ugc')" id="tab-ugc" class="service-tab px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all bg-brand-500 text-white shadow-lg shadow-brand-500/25">
+          🎬 UGC & Product Ads
+        </button>
+        <button onclick="switchService('web')" id="tab-web" class="service-tab px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all glass-card text-slate-400 hover:text-white">
+          ⚡ Web Development
+        </button>
+        <button onclick="switchService('images')" id="tab-images" class="service-tab px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all glass-card text-slate-400 hover:text-white">
+          🎨 Generative Imagery
+        </button>
+        <button onclick="switchService('automation')" id="tab-automation" class="service-tab px-5 py-2.5 rounded-full text-xs md:text-sm font-semibold transition-all glass-card text-slate-400 hover:text-white">
+          ⚙️ AI Automations
+        </button>
+      </div>
+
+      <!-- Dynamic Hub Display Box -->
+      <div id="service-content" class="glass-card rounded-3xl p-6 md:p-10 border-white/10 relative">
+        <!-- Content will be swapped via JavaScript -->
+      </div>
+    </section>
+
+    <!-- General Multi-Step Process Section -->
+    <section id="workflow" class="max-w-5xl mx-auto px-6 py-16">
+      <div class="text-center mb-14">
+        <span class="text-xs uppercase tracking-widest text-brand-400 font-semibold">Engineering Protocol</span>
+        <h2 class="font-display text-3xl font-bold text-white mt-2">How We Execute From Idea to Launch</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="glass-card p-6 rounded-2xl border-white/5 relative">
+          <div class="w-10 h-10 rounded-xl bg-brand-500/10 text-brand-400 font-display font-bold flex items-center justify-center mb-4">01</div>
+          <h3 class="text-lg font-bold text-white mb-2">Architectural Blueprint</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">We audit your brand target, draft visual moodboards, and map exact prompt architectures or UI wireframes.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl border-white/5 relative">
+          <div class="w-10 h-10 rounded-xl bg-indigo-500/10 text-indigo-400 font-display font-bold flex items-center justify-center mb-4">02</div>
+          <h3 class="text-lg font-bold text-white mb-2">High-Precision Synthesis</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Generative neural engines render ultra-HD assets or clean web code with rapid iteration feedback loops.</p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl border-white/5 relative">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 font-display font-bold flex items-center justify-center mb-4">03</div>
+          <h3 class="text-lg font-bold text-white mb-2">Scale & Hand-Off</h3>
+          <p class="text-xs text-slate-400 leading-relaxed">Final master files, live hosted web deployment, and integration documentation delivered directly to your desk.</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Sticky Back-to-Top Button -->
+  <button id="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); playBeep(650);" class="fixed bottom-6 right-6 z-40 p-3 rounded-full glass-card hover:border-brand-400 text-slate-300 hover:text-white shadow-xl transition-all opacity-0 pointer-events-none">
+    <i data-lucide="arrow-up" class="w-5 h-5"></i>
+  </button>
+
+  <!-- Global Footer -->
+  <footer class="border-t border-slate-900 bg-slate-950/60 py-12 px-6 mt-20 relative z-10">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+      <div>
+        <div class="font-display font-bold text-lg text-white">GrowthStudio</div>
+        <p class="text-xs text-slate-500 mt-1">Imagination into Execution with the help of AI.</p>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <a href="https://instagram.com/official.growth_studio" target="_blank" class="text-xs text-slate-400 hover:text-brand-400 transition flex items-center gap-1.5">
+          <i data-lucide="instagram" class="w-4 h-4"></i>
+          official.growth_studio
+        </a>
+        <button onclick="openBookingModal('Footer CTA'); playBeep(500);" class="text-xs text-slate-300 hover:text-white underline underline-offset-4">
+          Contact Founder
+        </button>
+      </div>
+
+      <div class="text-xs text-slate-600">
+        &copy; 2026 GrowthStudio. Engineered with Precision.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Booking Popup Modal (As Requested: Fields for Name, Email, Phone, Message, Budget + Two-way Flow Alert) -->
+  <div id="booking-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="glass-card bg-slate-950/95 max-w-lg w-full rounded-3xl p-6 md:p-8 border-slate-700 shadow-2xl transform scale-95 transition-transform duration-300 relative" id="modal-container">
+      
+      <button onclick="closeBookingModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <div id="form-wrapper">
+        <div class="mb-6">
+          <span id="modal-service-badge" class="px-2.5 py-1 rounded bg-brand-500/10 text-brand-400 text-xs font-semibold">General Inquiry</span>
+          <h3 class="font-display text-2xl font-bold text-white mt-2">Book a Strategy Session</h3>
+          <p class="text-xs text-slate-400 mt-1">Submit your project details. We will review and send confirmation times directly to your email.</p>
+        </div>
+
+        <form id="client-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Full Name</label>
+            <input type="text" required placeholder="e.g. Rahul Sharma" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-brand-500 transition" />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Email Address</label>
+              <input type="email" required placeholder="you@company.com" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-brand-500 transition" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-300 mb-1">Phone Number</label>
+              <input type="tel" required placeholder="+91 98765 43210" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-brand-500 transition" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Estimated Budget (INR / USD)</label>
+            <select class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-brand-500 transition">
+              <option value="under-15k">Under ₹15,000 / $200 (Pilot Project)</option>
+              <option value="15k-50k">₹15,000 - ₹50,000 (Growth Tier)</option>
+              <option value="50k-plus">₹50,000+ (Full Commercial Automation/Scale)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Project Brief & Details</label>
+            <textarea rows="3" required placeholder="Tell us what you want to build or generate..." class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-white text-sm focus:outline-none focus:border-brand-500 transition"></textarea>
+          </div>
+
+          <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-600 hover:to-indigo-700 font-semibold text-white text-sm shadow-xl shadow-brand-500/25 transition">
+            Send Inquiry & Request Schedule
+          </button>
+        </form>
+      </div>
+
+      <!-- Success Thank-You State (As Requested) -->
+      <div id="thank-you-wrapper" class="hidden text-center py-8">
+        <div class="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-4">
+          <i data-lucide="check" class="w-8 h-8"></i>
+        </div>
+        <h4 class="font-display text-2xl font-bold text-white mb-2">Thank you!</h4>
+        <p class="text-sm text-slate-300 max-w-sm mx-auto leading-relaxed mb-6">
+          Your request has been routed to our core desk. We will review your project specs and send you the exact meeting timing and agenda details soon via email.
+        </p>
+        <button onclick="closeBookingModal()" class="px-6 py-2.5 rounded-xl glass-card text-xs text-white hover:bg-slate-800 transition">
+          Close Window
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Interactive Hub Logic & Sound Synthesis -->
+  <script>
+    // 1. Web Audio API (Zero external MP3 dependency, ultra-fast click feedback)
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 440, type = 'sine') {
+      try {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.12);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.12);
+      } catch (e) {
+        // Fallback for browsers with autoplay policies
+      }
+    }
+
+    // 2. Custom AI Cursor Tracking
+    const cursor = document.getElementById('custom-cursor');
+    const aura = document.getElementById('custom-cursor-aura');
+    window.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      aura.style.left = e.clientX + 'px';
+      aura.style.top = e.clientY + 'px';
+    });
+
+    // 3. Scroll Back to Top Visibility
+    const btt = document.getElementById('back-to-top');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 400) {
+        btt.classList.remove('opacity-0', 'pointer-events-none');
+      } else {
+        btt.classList.add('opacity-0', 'pointer-events-none');
+      }
+    });
+
+    // 4. Dedicated Service Hub Data (Modular Swapping)
+    const serviceData = {
+      ugc: {
+        title: "AI UGC & Commercial Product Ads",
+        tag: "High Conversion Video Engine",
+        desc: "Transform static brand inventory and raw scripts into high-converting 9:16 vertical ads, cinematic 3D product turns, and hyper-realistic synthetic spokesperson UGC.",
+        process: [
+          { step: "01", title: "Script & Persona Sync", desc: "Crafting viral hook templates paired with the ideal AI presenter voice." },
+          { step: "02", title: "Generative Rendering", desc: "Synthesizing product renders and seamless lip-synced video takes." },
+          { step: "03", title: "Dynamic Sound & Soundfx", desc: "Adding trending audio waveforms and subtitling for maximum retention." }
+        ],
+        pricing: [
+          { name: "Starter Ad Pack", price: "Flexible / Per Reel", desc: "3x 10-15s High-Energy Vertical Hooks for Meta & Insta." },
+          { name: "Brand Commercial Suite", price: "Custom Quote", desc: "Full-funnel pack with multiple hooks, 4K upscaling & testing variations." }
+        ],
+        testimonial: {
+          quote: "The turn-around time for our product ads went from 2 weeks to 24 hours. The visual sharpness is unbelievable.",
+          author: "E-Commerce Founder"
+        }
+      },
+      web: {
+        title: "Modern AI & Superfast Web Development",
+        tag: "Ultra-Fast Edge Architecture",
+        desc: "Design and deployment of bespoke high-converting single-page landing engines, responsive Bento portfolios, and modern web apps with zero latency.",
+        process: [
+          { step: "01", title: "UI/UX Architecture", desc: "Structuring high-contrast wireframes using UI UX Pro Max standards." },
+          { step: "02", title: "Clean Code Generation", desc: "Crafting lightweight, semantic Tailwind components with zero framework bloat." },
+          { step: "03", title: "Cloudflare Edge Go-Live", desc: "Deploying to 300+ worldwide servers with unlimited bandwidth." }
+        ],
+        pricing: [
+          { name: "Landing Engine", price: "Starter Tier", desc: "Bespoke high-converting single page, domain routing, and contact bridge." },
+          { name: "Full Agency Presence", price: "Custom Package", desc: "Multi-modal interactive hub with custom calculators or animations." }
+        ],
+        testimonial: {
+          quote: "GrowthStudio built a blazing fast web presence that loads instantly on mobile. Exactly what our clients needed.",
+          author: "Retail Business Owner"
+        }
+      },
+      images: {
+        title: "High-Fidelity Generative Imagery",
+        tag: "Midjourney & Flux Photorealism",
+        desc: "Commercial photoshoot replacement. Generate studio-quality catalog shots, conceptual campaign art, and brand mascots without booking expensive physical studios.",
+        process: [
+          { step: "01", title: "Prompt & Style Calibration", desc: "Fixing camera lens parameters, aperture simulation, and color palettes." },
+          { step: "02", title: "Batch Synthesis & Inpainting", desc: "Refining texture details, hands, product logos, and sharp lighting." },
+          { step: "03", title: "4K Master Delivery", desc: "Delivering color-graded, print-ready files in all essential aspect ratios." }
+        ],
+        pricing: [
+          { name: "Product Catalog Batch", price: "Per Image Pack", desc: "Curated 10x 4K studio-grade product placements." },
+          { name: "Complete Brand Identity", price: "Scale Tier", desc: "Unlimited iterations, social media banners, and campaign key visuals." }
+        ],
+        testimonial: {
+          quote: "We completely skipped physical studio rentals this season. The AI product images look superior to standard camera photos.",
+          author: "Creative Director"
+        }
+      },
+      automation: {
+        title: "Autonomous AI Workflows & Systems",
+        tag: "Zero-Human Ops Engine",
+        desc: "Eliminate repetitive tasks by connecting LLMs to your daily social postings, customer response funnels, and data organization systems.",
+        process: [
+          { step: "01", title: "Workflow Audit", desc: "Identifying bottlenecks in your daily content or data pipelines." },
+          { step: "02", title: "System Orchestration", desc: "Connecting webhooks, AI models, and database endpoints seamlessly." },
+          { step: "03", title: "Autonomous Testing", desc: "Deploying self-healing background scripts that run 24/7." }
+        ],
+        pricing: [
+          { name: "Single Workflow Setup", price: "Per Setup", desc: "One automated content or lead capture pipeline." },
+          { name: "Complete Business Auto-Pilot", price: "Enterprise Retainer", desc: "Full orchestration of CRM, lead follow-ups, and auto-publishing." }
+        ],
+        testimonial: {
+          quote: "Our leads now get automated custom emails and instant previews without me having to open my laptop.",
+          author: "Digital Agency Lead"
+        }
+      }
+    };
+
+    function switchService(key) {
+      playBeep(480, 'sine');
+      
+      // Update Tab Styles
+      document.querySelectorAll('.service-tab').forEach(btn => {
+        btn.classList.remove('bg-brand-500', 'text-white', 'shadow-lg', 'shadow-brand-500/25');
+        btn.classList.add('glass-card', 'text-slate-400');
+      });
+      const activeBtn = document.getElementById(`tab-${key}`);
+      activeBtn.classList.add('bg-brand-500', 'text-white', 'shadow-lg', 'shadow-brand-500/25');
+      activeBtn.classList.remove('glass-card', 'text-slate-400');
+
+      const data = serviceData[key];
+      const container = document.getElementById('service-content');
+      
+      // Render dedicated details
+      container.innerHTML = `
+        <div class="space-y-8 animate-fadeIn">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-6">
+            <div>
+              <span class="text-xs uppercase tracking-widest text-brand-400 font-semibold">${data.tag}</span>
+              <h3 class="font-display text-2xl md:text-3xl font-bold text-white mt-1">${data.title}</h3>
+              <p class="text-sm text-slate-300 mt-2 max-w-2xl">${data.desc}</p>
+            </div>
+            <button onclick="openBookingModal('${data.title}'); playBeep(650);" class="px-6 py-3 rounded-xl bg-gradient-to-r from-brand-500 to-indigo-600 font-semibold text-white text-xs md:text-sm shadow-xl shadow-brand-500/20 whitespace-nowrap self-start md:self-center">
+              Inquire For This Service
+            </button>
+          </div>
+
+          <!-- Specific Process -->
+          <div>
+            <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Dedicated Delivery Process</h4>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              ${data.process.map(p => `
+                <div class="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
+                  <div class="text-xs font-mono text-brand-400 font-bold mb-1">${p.step}</div>
+                  <div class="text-sm font-bold text-white">${p.title}</div>
+                  <div class="text-xs text-slate-400 mt-1">${p.desc}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Specific Pricing & Testimonial Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <!-- Pricing Snippets -->
+            <div class="p-5 rounded-2xl bg-slate-900/40 border border-slate-800">
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Service Packaging</h4>
+              <div class="space-y-3">
+                ${data.pricing.map(pkg => `
+                  <div class="flex items-center justify-between p-3 rounded-lg bg-slate-950 border border-slate-800/60">
+                    <div>
+                      <div class="text-sm font-semibold text-white">${pkg.name}</div>
+                      <div class="text-xs text-slate-400">${pkg.desc}</div>
+                    </div>
+                    <span class="text-xs font-mono font-bold text-brand-400">${pkg.price}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Testimonial -->
+            <div class="p-5 rounded-2xl bg-gradient-to-br from-slate-900/60 to-brand-950/20 border border-slate-800 flex flex-col justify-center">
+              <div class="text-brand-400 mb-2">★★★★★</div>
+              <p class="text-sm text-slate-300 italic mb-4 leading-relaxed">"${data.testimonial.quote}"</p>
+              <div class="text-xs font-semibold text-white">— ${data.testimonial.author}</div>
+            </div>
+          </div>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+    // Initialize Default View
+    switchService('ugc');
+
+    // 5. Booking Modal Handlers
+    const modal = document.getElementById('booking-modal');
+    const modalContainer = document.getElementById('modal-container');
+    const badge = document.getElementById('modal-service-badge');
+    const formWrapper = document.getElementById('form-wrapper');
+    const thankYouWrapper = document.getElementById('thank-you-wrapper');
+
+    function openBookingModal(serviceName) {
+      badge.innerText = serviceName;
+      formWrapper.classList.remove('hidden');
+      thankYouWrapper.classList.add('hidden');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modalContainer.classList.remove('scale-95');
+      modalContainer.classList.add('scale-100');
+    }
+
+    function closeBookingModal() {
+      playBeep(400);
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modalContainer.classList.add('scale-95');
+      modalContainer.classList.remove('scale-100');
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      playBeep(750, 'triangle');
+      formWrapper.classList.add('hidden');
+      thankYouWrapper.classList.remove('hidden');
+    }
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
